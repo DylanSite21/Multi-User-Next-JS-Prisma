@@ -166,8 +166,8 @@ export default function EditProductPage() {
         </header>
 
         <main className="p-6 flex-1">
-          <div className="max-w-xl bg-gray-900 rounded p-6 r relative min-h-full">
-            <h1 className="text-xl font-bold mb-4">Tambah Product</h1>
+          <div className="max-w-xl bg-black rounded p-6 r relative min-h-full">
+            <h1 className="text-xl font-bold mb-4">Edit Product</h1>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -206,7 +206,7 @@ export default function EditProductPage() {
                 )}
               </div>
 
-              <button className="absolute bottom-0 bg-black text-white px-4 py-2 rounded">
+              <button className="absolute bottom-5 bg-white text-black px-4 py-2 rounded">
                 Simpan
               </button>
             </form>
