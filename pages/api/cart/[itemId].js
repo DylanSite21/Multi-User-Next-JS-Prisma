@@ -32,9 +32,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "Quantity is required" });
     }
     try {
+      const qty = Number(quantity);
+      if (qty <= 0) {
+        await prisma.cartItem.delete({ where: { id: itemId } });
+        return res.status(200).json({ deleted: true, id: itemId });
+      }
+
       const updated = await prisma.cartItem.update({
         where: { id: itemId },
-        data: { quantity: Number(quantity) },
+        data: { quantity: qty },
       });
       return res.status(200).json(updated);
     } catch (err) {

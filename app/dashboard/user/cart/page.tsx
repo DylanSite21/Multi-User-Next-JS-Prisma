@@ -54,14 +54,7 @@ export default function CartPage() {
         body: JSON.stringify({ quantity: qty }),
       });
       if (!res.ok) throw new Error("Gagal update qty");
-      const updated = await res.json();
-      setCart((c) => {
-        if (!c) return c;
-        return {
-          ...c,
-          items: c.items.map((it) => (it.id === updated.id ? updated : it)),
-        };
-      });
+      await res.json();
       await fetchCart();
     } catch (err) {
       console.error(err);
@@ -77,10 +70,7 @@ export default function CartPage() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Gagal hapus item");
-      setCart((c) => {
-        if (!c) return c;
-        return { ...c, items: c.items.filter((it) => it.id !== id) };
-      });
+      await fetchCart();
     } catch (err) {
       console.error(err);
       alert("Error hapus item");
@@ -122,6 +112,18 @@ export default function CartPage() {
             className="block px-4 py-2 rounded bg-gray-200 text-black font-medium"
           >
             Cart
+          </a>
+          <a
+            href="/dashboard/user/transaction"
+            className="block px-4 py-2 rounded hover:bg-gray-500 text-white"
+          >
+            Transaksi
+          </a>
+          <a
+            href="/dashboard/user/transaction/history"
+            className="block px-4 py-2 rounded hover:bg-gray-500 text-white"
+          >
+            Histori Transaksi
           </a>
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
@@ -169,11 +171,13 @@ export default function CartPage() {
                         <td className="border p-2">
                           <input
                             type="number"
-                            min={1}
+                            min={0}
                             value={it.quantity}
-                            onChange={(e) =>
-                              updateQuantity(it.id, parseInt(e.target.value))
-                            }
+                            onChange={(e) => {
+                              const value = Number(e.target.value);
+                              if (Number.isNaN(value)) return;
+                              updateQuantity(it.id, value);
+                            }}
                             className="w-16 border p-1 rounded text-center"
                           />
                         </td>
