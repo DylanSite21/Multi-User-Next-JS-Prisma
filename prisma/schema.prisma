@@ -7,67 +7,65 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  password      String?
-  role          String    @default("user")
-  image         String?
+  id String @id @default(cuid())
+  name String?
+  email String? @unique
+  password String?
+  role String @default("user")
+  image String?
   emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-
-  cart          Cart?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  accounts Account[]
+  sessions Session[]
+  cart Cart?
+  transaksis Transaksi[]
+  historyTransaksis HistoryTransaksi[]
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
+  id String @id @default(cuid())
+  userId String
+  type String
+  provider String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  refresh_token String?
+  access_token String?
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
+  sessionToken String @unique
+  userId String
+  expires DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {
-  id        String   @id @default(cuid())
-  name      String
-  price     Int
-  stock     Int
-  imageUrl  String?
+  id String @id @default(cuid())
+  name String
+  price Int
+  stock Int
+  imageUrl String?
   createdAt DateTime @default(now())
-
   cartItems CartItem[]
 }
 
-
 model Cart {
-  id        String      @id @default(cuid())
-  userId    String      @unique // Satu user hanya punya 1 cart aktif
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items     CartItem[]
-  status    CartStatus  @default(ACTIVE)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id String @id @default(cuid())
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+  status CartStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum CartStatus {
@@ -78,13 +76,44 @@ enum CartStatus {
 }
 
 model CartItem {
-  id        String  @id @default(cuid())
-  cartId    String
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
+  cartId String
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int     @default(1)
-  
-  // Unique constraint: satu produk hanya boleh 1x di cart
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity Int @default(1)
   @@unique([cartId, productId])
+}
+
+model Transaksi {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nomorTransaksi String @unique
+  amount Int
+  description String?
+  status TransaksiStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  historyTransaksis HistoryTransaksi[]
+}
+
+enum TransaksiStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  FAILED
+}
+
+model HistoryTransaksi {
+  id String @id @default(cuid())
+  transaksiId String
+  transaksi Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userRole String
+  action String
+  description String?
+  createdAt DateTime @default(now())
+  @@unique([transaksiId, userId])
 }
