@@ -20,6 +20,11 @@ export default function CartPage() {
   useEffect(() => {
     if (cart && cart.items.length > 0) {
       const newTotal = cart.items.reduce((sum, item) => {
+        const stock = item.product?.stock || 0;
+
+        // 🔥 SKIP kalau stock habis
+        if (stock === 0) return sum;
+
         return sum + (item.product?.price || 0) * item.quantity;
       }, 0);
       setTotal(newTotal);

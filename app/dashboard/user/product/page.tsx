@@ -198,7 +198,16 @@ export default function Product() {
                         <td className="border p-2">{index + 1}</td>
                         <td className="border p-2 text-left">{p.name}</td>
                         <td className="border p-2">{rupiah.format(p.price)}</td>
-                        <td className="border p-2">{p.stock}</td>
+                        <td className="border p-2">
+                          {" "}
+                          {p.stock === 0 ? (
+                            <span className="text-red-500 text-sm font-semibold">
+                              Stok habis
+                            </span>
+                          ) : (
+                            p.stock
+                          )}
+                        </td>
                         <td className="border p-2">
                           {p.imageUrl ? (
                             <img
