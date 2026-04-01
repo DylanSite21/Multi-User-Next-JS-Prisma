@@ -40,27 +40,7 @@ export default function UserDashboardPage() {
               >
                 Profile
               </a>
-              <a
-                href="#"
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 rounded text-white transition-colors duration-150 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100 focus:outline-none"
-              >
-                Settings
-              </a>
-              <a
-                href="/dashboard/user/transaction"
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 rounded text-white transition-colors duration-150 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100 focus:outline-none"
-              >
-                Transaksi
-              </a>
-              <a
-                href="/dashboard/user/transaction/history"
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 rounded text-white transition-colors duration-150 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100 focus:outline-none"
-              >
-                Histori Transaksi
-              </a>
+
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="
@@ -99,18 +79,7 @@ export default function UserDashboardPage() {
           >
             Cart
           </a>
-          <a
-            href="/dashboard/user/transaction"
-            className="block px-4 py-2 rounded hover:bg-gray-500 text-white hover:text-black"
-          >
-            Transaksi
-          </a>
-          <a
-            href="/dashboard/user/transaction/history"
-            className="block px-4 py-2 rounded hover:bg-gray-500 text-white hover:text-black"
-          >
-            Histori Transaksi
-          </a>
+
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
             className="

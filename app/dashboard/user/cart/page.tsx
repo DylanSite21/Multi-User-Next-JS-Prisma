@@ -158,17 +158,31 @@ export default function CartPage() {
                           {rupiah.format(prod?.price || 0)}
                         </td>
                         <td className="border p-2">
-                          <input
-                            type="number"
-                            min={0}
-                            value={it.quantity}
-                            onChange={(e) => {
-                              const value = Number(e.target.value);
-                              if (Number.isNaN(value)) return;
-                              updateQuantity(it.id, value);
-                            }}
-                            className="w-16 border p-1 rounded text-center"
-                          />
+                          {prod?.stock === 0 ? (
+                            <span className="text-red-500 text-sm font-semibold">
+                              Stok habis
+                            </span>
+                          ) : (
+                            <input
+                              type="number"
+                              min={1}
+                              max={prod?.stock || 1}
+                              value={it.quantity}
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+
+                                if (Number.isNaN(value)) return;
+
+                                if (value > (prod?.stock || 0)) {
+                                  alert("Jumlah melebihi stok!");
+                                  return;
+                                }
+
+                                updateQuantity(it.id, value);
+                              }}
+                              className="w-16 border p-1 rounded text-center"
+                            />
+                          )}
                         </td>
 
                         <td className="border p-2">

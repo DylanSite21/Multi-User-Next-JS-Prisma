@@ -27,14 +27,44 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PATCH" || req.method === "PUT") {
-    const { quantity } = req.body;
-    if (quantity == null) {
-      return res.status(400).json({ message: "Quantity is required" });
-    }
+    const { quantity, note } = req.body;
+
     try {
+      const data = {};
+
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+      });
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      if (quantity !== undefined) {
+        const qty = Number(quantity);
+
+        if (qty <= 0) {
+          await prisma.cartItem.delete({ where: { id: itemId } });
+          return res.status(200).json({ deleted: true });
+        }
+
+        // 🔥 VALIDASI STOCK
+        if (qty > product.stock) {
+          return res.status(400).json({
+            message: `Stock hanya tersisa ${product.stock}`,
+          });
+        }
+
+        data.quantity = qty;
+      }
+
+      if (note !== undefined) {
+        data.note = note;
+      }
+
       const updated = await prisma.cartItem.update({
         where: { id: itemId },
-        data: { quantity: Number(quantity) },
+        data,
       });
 
       return res.status(200).json(updated);
